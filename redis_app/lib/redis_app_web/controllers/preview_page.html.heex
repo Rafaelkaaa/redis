@@ -1,0 +1,53 @@
+<div class="flex justify-between">
+<.button phx-click="show_create">Create new</.button>
+
+<.button phx-click="create_10" class="bg-blue-500">Create 10 Key-Value pairs</.button>
+</div>
+
+<%= if @show_create do %>
+  <.form for={@form} phx-submit="create" class="bg-gray-50" phx-show={@show_create} class="bg-gray-50 mt-2 p-3" >
+    <h2>Create Form</h2>
+    <div class="mt-2 w-60">
+      <.input  type="text" id="key" name="key" value="" label="key" required />
+    </div>
+    <div class="mt-2 w-60">
+      <.input type="text" id="value" name="value" value="" label="value" required />
+    </div>
+    <div class="mt-2">
+      <.button type="submit">Save</.button>
+      <.button type="button" phx-click="cancel_create">Cancel</.button>
+    </div>
+  </.form>
+<% end %>
+
+<%= if @show_update do %>
+  <.form for={@form} phx-submit="update" class="bg-gray-50 mt-2 p-3">
+    <h2>Update Form</h2>
+    <div class="mt-2 w-60">
+      <.input class="bg-gray-50" field={@form[:key]} type="text" id="key" name="key" label="key" readonly/>
+    </div>
+    <div class="mt-2 w-60">
+      <.input field={@form[:value]} type="text" id="value" name="value" label="value" required />
+    </div>
+    <div class="mt-2">
+      <.button type="submit">Save</.button>
+      <.button type="button" phx-click="cancel_update">Cancel</.button>
+    </div>
+  </.form>
+<% end %>
+
+<.table id="keys_values" rows={@list_keys_values}>
+  <:col :let={item} label="Key">
+    {item.key}
+  </:col>
+  <:col :let={item} label="Value">
+    {item.value}
+  </:col>
+  <:col :let={item}>
+    <.button phx-click="delete" value={item.key}>Delete</.button>
+  </:col>
+  <:col :let={item}>
+    <.button phx-click="show_update" value={item.key}>Update</.button>
+  </:col>
+</.table>
+
