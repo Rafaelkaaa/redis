@@ -1,6 +1,6 @@
  ```docker-compose up -d```
 
-```redis-cli -h 192.168.1.62 -p 6380 PING```
+```redis-cli -h 192.168.1.62 -p 6380 PING``` for test docker conteiner if you see answer ```PONG```  means docker conteiner started
 
 ```cd redis_app```
 
