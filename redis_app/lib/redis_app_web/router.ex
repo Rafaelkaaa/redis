@@ -16,9 +16,7 @@ defmodule RedisAppWeb.Router do
 
   scope "/", RedisAppWeb do
     pipe_through(:browser)
-
-    get("/", PageController, :home)
-    live("/preview", PreviewPage)
+    live("/", PreviewPage)
   end
 
   # Other scopes may use custom stacks.

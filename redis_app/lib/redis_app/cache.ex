@@ -4,7 +4,7 @@ defmodule RedisApp.Cache do
   defp connect do
     case Redix.start_link(@redis_config) do
       {:ok, conn} -> {:ok, conn}
-      %Redix.ConnectionError{reason: :closed} -> {:error, "Failed to connect to Redis"}
+      {:error, reason} -> IO.inspect(reason, label: "Failed to connect to Redis")
     end
   end
 
@@ -15,6 +15,24 @@ defmodule RedisApp.Cache do
           {:ok, reply} -> {:ok, reply}
           {:error, reason} -> IO.inspect(reason, label: "Redix error")
         end
+
+      %Redix.ConnectionError{reason: :closed} ->
+        {:error, "Failed to connect to Redis"}
+
+      {:error, _reason} ->
+        {:error, "Failed to connect to Redis"}
+    end
+  end
+  def delete_all() do
+    case connect() do
+      {:ok, conn} ->
+        case Redix.command(conn, ["FLUSHALL"]) do
+          {:ok, reply} -> {:ok, reply}
+          {:error, reason} -> IO.inspect(reason, label: "Redix error")
+        end
+
+      %Redix.ConnectionError{reason: :closed} ->
+        {:error, "Failed to connect to Redis"}
 
       {:error, _reason} ->
         {:error, "Failed to connect to Redis"}
@@ -29,6 +47,9 @@ defmodule RedisApp.Cache do
           {:error, reason} -> IO.inspect(reason, label: "Redix error")
         end
 
+      %Redix.ConnectionError{reason: :closed} ->
+        {:error, "Failed to connect to Redis"}
+
       {:error, _reason} ->
         {:error, "Failed to connect to Redis"}
     end
@@ -42,6 +63,9 @@ defmodule RedisApp.Cache do
           {:ok, 0} -> {:error, "Key: #{key} not found"}
           {:error, reason} -> IO.inspect(reason, label: "Redix error")
         end
+
+      %Redix.ConnectionError{reason: :closed} ->
+        {:error, "Failed to connect to Redis"}
 
       {:error, _reason} ->
         {:error, "Failed to connect to Redis"}
@@ -62,6 +86,9 @@ defmodule RedisApp.Cache do
           {:ok, reply} -> reply
           {:error, reason} -> IO.inspect(reason, label: "Redix error")
         end
+
+      %Redix.ConnectionError{reason: :closed} ->
+        {:error, "Failed to connect to Redis"}
 
       {:error, _reason} ->
         {:error, "Failed to connect to Redis"}

@@ -7,3 +7,5 @@
  ```mix setup```
  
  ```iex -S mix phx.server```
+
+ Now you can visit http://localhost:4000 from your browser.
