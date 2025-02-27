@@ -6,5 +6,5 @@ defmodule ElasticsearchWeb.PageHTML do
   """
   use ElasticsearchWeb, :html
 
-  embed_templates "page_html/*"
+  embed_templates("page_html/*")
 end

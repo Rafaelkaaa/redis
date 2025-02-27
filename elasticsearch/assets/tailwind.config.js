@@ -9,7 +9,8 @@ module.exports = {
   content: [
     "./js/**/*.js",
     "../lib/elasticsearch_web.ex",
-    "../lib/elasticsearch_web/**/*.*ex"
+    "../lib/elasticsearch_web/**/*.{ex,heex}",
+    "../lib/elasticsearch_web/controllers/**/*.html.heex"
   ],
   theme: {
     extend: {

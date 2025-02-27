@@ -58,7 +58,9 @@ defmodule Elasticsearch.MixProject do
       {:jason, "~> 1.2"},
       {:dns_cluster, "~> 0.1.1"},
       {:bandit, "~> 1.5"},
-      {:elasticsearch, "~> 1.1"}
+      {:elastix, "~> 0.10.0"},
+      {:poison, "~> 4.0"},
+      {:faker, "~> 0.18.0"}
     ]
   end
 

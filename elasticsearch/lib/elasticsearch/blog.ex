@@ -5,8 +5,8 @@ defmodule Elasticsearch.Blog do
 
   import Ecto.Query, warn: false
   alias Elasticsearch.Repo
-
   alias Elasticsearch.Blog.Post
+  alias Elasticsearch.ElasticsearchCluster, as: Elasticsearch
 
   @doc """
   Returns the list of posts.
@@ -18,7 +18,7 @@ defmodule Elasticsearch.Blog do
 
   """
   def list_posts do
-    Repo.all(Post)
+    Elasticsearch.get_all_documents()
   end
 
   @doc """
@@ -53,6 +53,14 @@ defmodule Elasticsearch.Blog do
     %Post{}
     |> Post.changeset(attrs)
     |> Repo.insert()
+    |> case do
+      {:ok, post} ->
+        Elasticsearch.index_post(post)
+        {:ok, post}
+
+      error ->
+        IO.inspect(error)
+    end
   end
 
   @doc """
@@ -86,6 +94,8 @@ defmodule Elasticsearch.Blog do
 
   """
   def delete_post(%Post{} = post) do
+    IO.inspect(post)
+    Elasticsearch.delete_post(post.id)
     Repo.delete(post)
   end
 

@@ -3,12 +3,12 @@ defmodule Elasticsearch.Blog.Post do
   import Ecto.Changeset
 
   schema "posts" do
-    field :label, :string
-    field :tag, :string
-    field :article, :string
-    field :author, :string
-    field :published, :boolean, default: false
-    field :published_at, :utc_datetime, default: nil
+    field(:label, :string)
+    field(:tag, :string)
+    field(:article, :string)
+    field(:author, :string)
+    field(:published, :boolean, default: false)
+    field(:published_at, :utc_datetime, default: nil)
 
     timestamps(type: :utc_datetime)
   end
