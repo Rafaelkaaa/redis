@@ -25,6 +25,7 @@ defmodule Elasticsearch.ElasticsearchCluster do
     }
 
     Index.create(@url, @index, mapping)
+    sync_posts_to_elasticsearch
   end
 
   def index_post(%Post{} = post) do
