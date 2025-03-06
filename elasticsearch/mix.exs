@@ -60,6 +60,8 @@ defmodule Elasticsearch.MixProject do
       {:bandit, "~> 1.5"},
       {:elastix, "~> 0.10.0"},
       {:poison, "~> 4.0"},
+      {:httpoison, "~> 1.4"},
+      {:retry, "~> 0.8.0"},
       {:faker, "~> 0.18.0"}
     ]
   end

@@ -20,6 +20,7 @@ defmodule ElasticsearchWeb.PostLive.FormComponent do
         phx-submit="save"
       >
         <.input field={@form[:article]} type="text" label="Article" />
+        <.input field={@form[:author]} type="text" label="Author" />
         <.input field={@form[:published]} type="checkbox" label="Published" />
         <.input field={@form[:tag]} type="text" label="Tag" />
         <.input field={@form[:label]} type="text" label="Label" />

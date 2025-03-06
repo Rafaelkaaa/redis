@@ -6,7 +6,7 @@ defmodule Elasticsearch.Blog do
   import Ecto.Query, warn: false
   alias Elasticsearch.Repo
   alias Elasticsearch.Blog.Post
-  alias Elasticsearch.ElasticsearchCluster, as: Elasticsearch
+  alias Elasticsearch.ElasticsearchCluster
 
   @doc """
   Returns the list of posts.
@@ -18,7 +18,7 @@ defmodule Elasticsearch.Blog do
 
   """
   def list_posts do
-    Elasticsearch.get_all_documents()
+    ElasticsearchCluster.get_all_documents()
   end
 
   @doc """
@@ -49,13 +49,13 @@ defmodule Elasticsearch.Blog do
       {:error, %Ecto.Changeset{}}
 
   """
-  def create_post(attrs \\ %{}) do
+  def create_post(attrs) do
     %Post{}
     |> Post.changeset(attrs)
     |> Repo.insert()
     |> case do
       {:ok, post} ->
-        Elasticsearch.index_post(post)
+        ElasticsearchCluster.index_post(post)
         {:ok, post}
 
       error ->
@@ -79,6 +79,14 @@ defmodule Elasticsearch.Blog do
     post
     |> Post.changeset(attrs)
     |> Repo.update()
+    |> case do
+      {:ok, post} ->
+        ElasticsearchCluster.index_post(post)
+        {:ok, post}
+
+      error ->
+        IO.inspect(error)
+    end
   end
 
   @doc """
@@ -93,10 +101,16 @@ defmodule Elasticsearch.Blog do
       {:error, %Ecto.Changeset{}}
 
   """
-  def delete_post(%Post{} = post) do
-    IO.inspect(post)
-    Elasticsearch.delete_post(post.id)
-    Repo.delete(post)
+  def delete_post(id) do
+    case get_post!(id) do
+      %Post{} = post ->
+        ElasticsearchCluster.delete_post(post.id)
+        Repo.delete(post)
+        post
+
+      error ->
+        IO.inspect(error)
+    end
   end
 
   @doc """
@@ -110,5 +124,17 @@ defmodule Elasticsearch.Blog do
   """
   def change_post(%Post{} = post, attrs \\ %{}) do
     Post.changeset(post, attrs)
+  end
+
+  def get_posts_by_search(search) do
+    case search do
+      "" ->
+        ElasticsearchCluster.get_all_documents()
+
+      _ ->
+        search
+        |> String.downcase()
+        |> ElasticsearchCluster.get_posts_by_search()
+    end
   end
 end

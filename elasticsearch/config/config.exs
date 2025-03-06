@@ -68,3 +68,7 @@ import_config "#{config_env()}.exs"
 config :elasticsearch,
   url: "http://localhost:9200",
   index: "posts"
+
+config :elastix,
+  json_options: [keys: :atoms!],
+  httpoison_options: [hackney: [pool: :elastix_pool]]
