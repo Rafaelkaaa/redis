@@ -1,2 +1,3 @@
 ExUnit.start()
-Ecto.Adapters.SQL.Sandbox.mode(Elasticsearch.Repo, :manual)
+
+Elasticsearch.ElasticsearchCluster.create_index()

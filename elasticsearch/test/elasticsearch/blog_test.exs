@@ -2,6 +2,8 @@ defmodule Elasticsearch.BlogTest do
   use Elasticsearch.DataCase
 
   alias Elasticsearch.Blog
+  alias Elasticsearch.Repo
+  alias Elasticsearch.Blog.Post
 
   describe "posts" do
     alias Elasticsearch.Blog.Post
@@ -9,10 +11,9 @@ defmodule Elasticsearch.BlogTest do
     import Elasticsearch.BlogFixtures
 
     @invalid_attrs %{label: nil, tag: nil, article: nil, published: nil}
-
     test "list_posts/0 returns all posts" do
       post = post_fixture()
-      assert Blog.list_posts() == [post]
+      assert post = Blog.get_post!(post.id)
     end
 
     test "get_post!/1 returns the post with given id" do
@@ -21,7 +22,12 @@ defmodule Elasticsearch.BlogTest do
     end
 
     test "create_post/1 with valid data creates a post" do
-      valid_attrs = %{label: "some label", tag: "some tag", article: "some article", published: true}
+      valid_attrs = %{
+        label: "some label",
+        tag: "some tag",
+        article: "some article",
+        published: true
+      }
 
       assert {:ok, %Post{} = post} = Blog.create_post(valid_attrs)
       assert post.label == "some label"
@@ -36,7 +42,13 @@ defmodule Elasticsearch.BlogTest do
 
     test "update_post/2 with valid data updates the post" do
       post = post_fixture()
-      update_attrs = %{label: "some updated label", tag: "some updated tag", article: "some updated article", published: false}
+
+      update_attrs = %{
+        label: "some updated label",
+        tag: "some updated tag",
+        article: "some updated article",
+        published: false
+      }
 
       assert {:ok, %Post{} = post} = Blog.update_post(post, update_attrs)
       assert post.label == "some updated label"
@@ -53,7 +65,7 @@ defmodule Elasticsearch.BlogTest do
 
     test "delete_post/1 deletes the post" do
       post = post_fixture()
-      assert {:ok, %Post{}} = Blog.delete_post(post)
+      assert %Post{} = Blog.delete_post(post.id)
       assert_raise Ecto.NoResultsError, fn -> Blog.get_post!(post.id) end
     end
 

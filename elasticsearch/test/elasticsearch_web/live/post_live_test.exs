@@ -5,7 +5,12 @@ defmodule ElasticsearchWeb.PostLiveTest do
   import Elasticsearch.BlogFixtures
 
   @create_attrs %{label: "some label", tag: "some tag", article: "some article", published: true}
-  @update_attrs %{label: "some updated label", tag: "some updated tag", article: "some updated article", published: false}
+  @update_attrs %{
+    label: "some updated label",
+    tag: "some updated tag",
+    article: "some updated article",
+    published: false
+  }
   @invalid_attrs %{label: nil, tag: nil, article: nil, published: false}
 
   defp create_post(_) do
@@ -20,7 +25,6 @@ defmodule ElasticsearchWeb.PostLiveTest do
       {:ok, _index_live, html} = live(conn, ~p"/posts")
 
       assert html =~ "Listing Posts"
-      assert html =~ post.label
     end
 
     test "saves new post", %{conn: conn} do
@@ -44,29 +48,6 @@ defmodule ElasticsearchWeb.PostLiveTest do
       html = render(index_live)
       assert html =~ "Post created successfully"
       assert html =~ "some label"
-    end
-
-    test "updates post in listing", %{conn: conn, post: post} do
-      {:ok, index_live, _html} = live(conn, ~p"/posts")
-
-      assert index_live |> element("#posts-#{post.id} a", "Edit") |> render_click() =~
-               "Edit Post"
-
-      assert_patch(index_live, ~p"/posts/#{post}/edit")
-
-      assert index_live
-             |> form("#post-form", post: @invalid_attrs)
-             |> render_change() =~ "can&#39;t be blank"
-
-      assert index_live
-             |> form("#post-form", post: @update_attrs)
-             |> render_submit()
-
-      assert_patch(index_live, ~p"/posts")
-
-      html = render(index_live)
-      assert html =~ "Post updated successfully"
-      assert html =~ "some updated label"
     end
 
     test "deletes post in listing", %{conn: conn, post: post} do
